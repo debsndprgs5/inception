@@ -1,0 +1,64 @@
+version: '3'
+services:
+  mariadb:
+    container_name: mariadb
+    networks:
+      - inception #which network he is a part of
+    build:
+      context: ./requirements/mariadb #where the dockerfile is
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - mariadb:/var/lib/mysql
+    restart: unless-stopped #redemarre tant qu'il n'est pas stoppé
+    # expose: #le port a exposer
+    #   - "3306"
+
+  nginx:
+    container_name: nginx
+    networks:
+     - inception #which network he is a part of
+    depends_on:
+      - wordpress #wait for wordpress to be started to start
+    build:
+      context: ./requirements/nginx/. #where the dockerfile is
+      dockerfile: Dockerfile
+    env_file: .env
+    ports:
+      - "443:443" #port exposed to the local machine
+    volumes:
+      - wordpress:/var/www/html
+    restart: on-failure #redemarre en cas de crash
+
+  wordpress:
+    container_name: wordpress
+    env_file: .env
+    volumes:
+      - wordpress:/var/www/wordpress
+    networks:
+      - inception
+    build:
+      context: ./requirements/wordpress/.
+      dockerfile: Dockerfile
+    depends_on: # wordpress needs to wait for the database to be init
+      - mariadb
+    restart: on-failure
+
+volumes:
+  wordpress:
+    driver: local #we stock the volumes in local to avoid losing data if the services happens to crash
+    driver_opts:
+      type: none
+      o: bind # mount type, bind is accessible by other process
+      device: /home/zfavere/data/wordpress #local path to store data
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/zfavere/data/mariadb
+
+networks:
+  inception:
+    driver: bridge #automatic docker config to make the containers communicate in bridge

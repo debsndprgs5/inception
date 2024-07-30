@@ -1,0 +1,19 @@
+# Config category (mysql)
+[mysqld]
+
+# Where to store the database
+datadir = /var/lib/mysql
+
+# Path to mysql socket
+socket  = /run/mysqld/mysqld.sock
+
+# All address in network accepted
+bind_address=*
+
+# Subject-given port
+port = 3306
+
+# Mysql user
+user = mysql
+
+skip-networking = false
