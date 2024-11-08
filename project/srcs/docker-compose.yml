@@ -1,18 +1,19 @@
 version: '3'
 services:
-    mariadb:
-        ports: 
-            - ${DB_PORT}:${DB_PORT}
-        build: $ABSOLUTE_PATH/requirements/mariadb
-        image: $DB_IMAGE_NAME
-        container_name: $DB_CONTAINER_NAME
-        env_file: 
-            - .env
-        networks:
-            - $NETWORK_NAME
-        volumes:
-            - inception_mariadb_volume:/var/lib/mysql
-        restart: always
+  
+  mariadb:
+      ports: 
+          - ${DB_PORT}:${DB_PORT}
+      build: $ABSOLUTE_PATH/requirements/mariadb
+      image: $DB_IMAGE_NAME
+      container_name: $DB_CONTAINER_NAME
+      env_file: 
+          - .env
+      networks:
+          - $NETWORK_NAME
+      volumes:
+          - inception_mariadb_volume:/var/lib/mysql
+      restart: always
 
   nginx:
     container_name: nginx
