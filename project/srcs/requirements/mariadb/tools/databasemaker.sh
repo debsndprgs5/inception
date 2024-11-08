@@ -1,56 +1,47 @@
 #!/bin/bash
 
-#-------------------------------------------------------
-# Start MySQL
-#
-mysql_install_db
-#
-/etc/init.d/mysql start
-#-------------------------------------------------------
+# Check if the directory doesn't exist
+if [ ! -d "/run/mysqld" ]; then
+    mkdir -p /run/mysqld
 
-# Wait for mysql to be started
-until mysqladmin ping -h localhost --silent; do
-    echo 'Waiting for MySQL to be ready...'
-    sleep 1
-done
+    # Set the owner and group for the directory
+    chown mysql:mysql /run/mysqld
 
-#-------------------------------------------------------
-# Create (if it doesnt already exist) a new database named after
-# env_var "SQL_DATABASE" declared in .env that'll be sent by 
-# docker-compose.yml
-#
-mysql -e "CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;"
-#-------------------------------------------------------
+    # Set the permissions for the directory to be more restrictive
+    chmod 750 /run/mysqld
+fi
 
-#-------------------------------------------------------
-# Create a new SQL User that will be able to edit the db
-# named after env_var SQL_USER with env_var SQL_PASSWORD as pswd
-#
-mysql -e "CREATE USER IF NOT EXISTS \`${SQL_USER}\`@'localhost' IDENTIFIED BY '${SQL_PASSWORD}';"
-#-------------------------------------------------------
+# Initialize MySQL Data Directory if it hasn't been initialized yet
 
-#-------------------------------------------------------
-# Grant divine power to the new user for the SQL_DATABASE
-#
-mysql -e "GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO \`${SQL_USER}\`@'%' IDENTIFIED BY '${SQL_PASSWORD}';"
-#-------------------------------------------------------
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+    chown -R mysql:mysql /var/lib/mysql
+    mysql_install_db --basedir=/usr --datadir=/var/lib/mysql --user=mysql --rpm > /dev/null
+    tfile=`mktemp`
+    if [ ! -f "$tfile" ]; then
+        return 1
+    fi
+    # Create and send init basic settings to a temp file, then used
+    # for a mdb bootstrap mode setup
+    cat << EOF > $tfile
+    USE mysql;
+    FLUSH PRIVILEGES;
+    DELETE FROM mysql.user WHERE User='';
+    DROP DATABASE test;
+    DELETE FROM mysql.db WHERE Db='test';
+    DELETE FROM mysql.user WHERE User='$DB_ROOT' AND Host NOT IN ('$DB_HOST', '127.0.0.1', '::1');
+    ALTER USER 'root'@'$DB_HOST' IDENTIFIED BY '$DB_ROOT_PWDD';
+    CREATE DATABASE $DB_NAME CHARACTER SET utf8 COLLATE utf8_general_ci;
+    CREATE USER '$DB_USER'@'%' IDENTIFIED by '$DB_USER_PWD';
+    GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';
+    GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'$DB_HOST' IDENTIFIED BY '$DB_USER_PWD';
+    FLUSH PRIVILEGES;
+EOF
+    /usr/bin/mysqld --user=mysql --bootstrap < $tfile
+    rm -f $tfile
+fi
+# Config mariadb to allow external connections & uncommenting skip-networking in mdb conf
+sed -i "s|skip-networking|# skip-networking|g" /etc/my.cnf.d/mariadb-server.cnf
+sed -i "s|.*bind-address\s*=.*|bind-address=0.0.0.0|g" /etc/my.cnf.d/mariadb-server.cnf
 
-#-------------------------------------------------------
-# Modify root user with localhost rights
-#
-mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';"
-#-------------------------------------------------------
-
-#-------------------------------------------------------
-# Refresh
-#
-mysql -e "FLUSH PRIVILEGES;"
-#-------------------------------------------------------
-
-#-------------------------------------------------------
-# Restart MySQL
-#
-mysqladmin -u root -p $SQL_ROOT_PASSWORD shutdown
-exec mysqld_safe
-#-------------------------------------------------------
-exec "$@"
+# Start MariaDB
+exec /usr/bin/mysqld --user=mysql --console
