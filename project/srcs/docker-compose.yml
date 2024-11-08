@@ -1,19 +1,18 @@
 version: '3'
 services:
-  mariadb:
-    container_name: mariadb
-    networks:
-      - inception #which network he is a part of
-    build:
-      context: ./requirements/mariadb #where the dockerfile is
-      dockerfile: Dockerfile
-    env_file:
-      - .env
-    volumes:
-      - mariadb:/var/lib/mysql
-    restart: unless-stopped #redemarre tant qu'il n'est pas stoppé
-    # expose: #le port a exposer
-    #   - "3306"
+    mariadb:
+        ports: 
+            - ${DB_PORT}:${DB_PORT}
+        build: $ABSOLUTE_PATH/requirements/mariadb
+        image: $DB_IMAGE_NAME
+        container_name: $DB_CONTAINER_NAME
+        env_file: 
+            - .env
+        networks:
+            - $NETWORK_NAME
+        volumes:
+            - inception_mariadb_volume:/var/lib/mysql
+        restart: always
 
   nginx:
     container_name: nginx
