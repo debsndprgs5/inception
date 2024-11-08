@@ -24,7 +24,7 @@ restart:
 # Remove all containers, images, and volumes
 clean:
 	@sudo echo "Turning off the containers..."
-	@cd srcs && @sudo docker-compose down
+	@cd srcs && sudo docker-compose down
 
 fclean:
 	@make clean
