@@ -26,14 +26,13 @@ clean:
 	@sudo echo "Turning off the containers..."
 	@cd srcs && sudo docker-compose down
 
+#Remove all Docker networks/volumes that currently exist on the system, 
+#without showing errors if there are none to delete
 fclean:
 	@make clean
 	@echo "Removing every container, image and volume..."
 	@sudo docker system prune -a -f --volumes
 	@sudo docker network prune -f
-	
-	#Remove all Docker networks/volumes that currently exist on the system, 
-	#without showing errors if there are none to delete
 	@sudo docker network rm $$(docker network ls -q) 2>/dev/null || true
 	@sudo docker volume rm $$(docker volume ls -qf dangling=true) 2>/dev/null || true
 	@sudo rm -rf $(ABSOLUTE_PATH)$(DB_VOLUME_PATH) $(ABSOLUTE_PATH)$(WP_VOLUME_PATH)
