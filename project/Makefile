@@ -3,7 +3,7 @@ include ./srcs/.env
 export
 
 build:
-	@echo "Creating $(DOMAIN_NAME) in etc/hosts..."
+	@sudo echo "Creating $(DOMAIN_NAME) in etc/hosts..."
 	@sudo chmod 666 $(HOSTS)
 	@sudo echo "127.0.0.1 $(DOMAIN_NAME)" >> $(HOSTS)
 	@sudo echo "127.0.0.1 www.$(DOMAIN_NAME)" >> $(HOSTS)
@@ -23,20 +23,20 @@ restart:
 
 # Remove all containers, images, and volumes
 clean:
-	@echo "Turning off the containers..."
-	@cd srcs && docker-compose down
+	@sudo echo "Turning off the containers..."
+	@cd srcs && @sudo docker-compose down
 
 fclean:
 	@make clean
 	@echo "Removing every container, image and volume..."
-	@docker system prune -a -f --volumes
-	@docker network prune -f
+	@sudo docker system prune -a -f --volumes
+	@sudo docker network prune -f
 	
 	#Remove all Docker networks/volumes that currently exist on the system, 
 	#without showing errors if there are none to delete
-	@docker network rm $$(docker network ls -q) 2>/dev/null || true
-	@docker volume rm $$(docker volume ls -qf dangling=true) 2>/dev/null || true
-	@rm -rf $(ABSOLUTE_PATH)$(DB_VOLUME_PATH) $(ABSOLUTE_PATH)$(WP_VOLUME_PATH)
+	@sudo docker network rm $$(docker network ls -q) 2>/dev/null || true
+	@sudo docker volume rm $$(docker volume ls -qf dangling=true) 2>/dev/null || true
+	@sudo rm -rf $(ABSOLUTE_PATH)$(DB_VOLUME_PATH) $(ABSOLUTE_PATH)$(WP_VOLUME_PATH)
 
 re:
 	make fclean
