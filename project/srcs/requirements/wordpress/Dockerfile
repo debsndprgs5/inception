@@ -8,67 +8,71 @@ ENV 		WP_PHP_GROUP=$WP_PHP_GROUP
 
 # Install all requirements
 
-RUN			apk update && apk upgrade && apk add --no-cache \
-				wget				\
-				tar                 \
-				mariadb-client		\
-				redis				\
-				curl 				\
-				php7				\
-				php7-fpm			\
-				php7-bcmath			\
-				php7-bz2 			\
-				php7-calendar		\
-				php7-cgi			\
-				php7-ctype			\
-				php7-common			\
-				php7-curl			\
-				php7-gettext		\
-				php7-dom			\
-				php7-exif			\
-				php7-fileinfo		\
-				php7-gd				\
-				php7-gmagick		\
-				php7-gmp			\
-				php7-iconv			\
-				php7-imap			\
-				php7-intl			\
-				php7-json			\
-				php7-mbstring		\
-				php7-mcrypt			\
-				php7-memcache		\
-				php7-mysqli			\
-				php7-mysqlnd		\
-				php7-ldap			\
-				php7-opcache		\
-				php7-openssl		\
-				php7-pcntl			\
-				php7-pdo			\
-				php7-pdo_mysql		\
-				php7-pdo_pgsql		\
-				php7-pdo_sqlite 	\
-				php7-pgsql			\
-				php7-phar			\
-				php7-posix			\
-				php7-redis			\	
-				php7-session		\
-				php7-shmop			\
-				php7-simplexml		\
-				php7-soap			\
-				php7-sockets		\
-				php7-sodium			\
-				php7-sqlite3		\
-				php7-sysvsem		\
-				php7-sysvshm		\
-				php7-tokenizer		\
-				php7-xml			\
-				php7-xmlreader		\
-				php7-xmlrpc			\
-				php7-xmlwriter		\
-				php7-xsl			\
-				php7-zip			\
-				php7-zlib			\
-				gettext
+FROM debian:latest
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+    wget \
+    tar \
+    mariadb-client \
+    redis \
+    curl \
+    php \
+    php-fpm \
+    php-bcmath \
+    php-bz2 \
+    php-calendar \
+    php-cgi \
+    php-ctype \
+    php-common \
+    php-curl \
+    php-gettext \
+    php-dom \
+    php-exif \
+    php-fileinfo \
+    php-gd \
+    php-imagick \
+    php-gmp \
+    php-iconv \
+    php-imap \
+    php-intl \
+    php-json \
+    php-mbstring \
+    php-mcrypt \
+    php-memcached \
+    php-mysqli \
+    php-mysql \
+    php-ldap \
+    php-opcache \
+    php-openssl \
+    php-pcntl \
+    php-pdo \
+    php-pdo-mysql \
+    php-pdo-pgsql \
+    php-pdo-sqlite \
+    php-pgsql \
+    php-phar \
+    php-posix \
+    php-redis \
+    php-session \
+    php-shmop \
+    php-simplexml \
+    php-soap \
+    php-sockets \
+    php-sodium \
+    php-sqlite3 \
+    php-sysvsem \
+    php-sysvshm \
+    php-tokenizer \
+    php-xml \
+    php-xmlreader \
+    php-xmlrpc \
+    php-xmlwriter \
+    php-xsl \
+    php-zip \
+    php-zlib \
+    gettext \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 #Add php user
 
