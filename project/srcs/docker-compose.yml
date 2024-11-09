@@ -16,34 +16,47 @@ services:
       restart: always
 
   nginx:
-    container_name: nginx
-    networks:
-     - inception #which network he is a part of
-    depends_on:
-      - wordpress #wait for wordpress to be started to start
-    build:
-      context: ./requirements/nginx/. #where the dockerfile is
-      dockerfile: Dockerfile
-    env_file: .env
     ports:
-      - "443:443" #port exposed to the local machine
+      - ${NGINX_PORT}:${NGINX_PORT} #port exposed to the local machine
+    build:
+      context: $ABSOLUTE_PATH/requirements/nginx/ #where the dockerfile is
+      dockerfile: Dockerfile
+    container_name: $NGINX_CONTAINER_NAME
+    networks:
+     - $NETWORK_NAME #which network he is a part of
+    env_file: .env
     volumes:
-      - wordpress:/var/www/html
-    restart: on-failure #redemarre en cas de crash
+      - $ABSOLUTE_PATH/requirements/nginx/ssl:/etc/nginx/ssl
+      - inception_wordpress_volume:/var/www/html
+    depends_on:
+      - wordpress:
+                condition: service_healthy #wait for wordpress to be started and healthy to start
+    restart: always 
 
   wordpress:
+    ports:
+      - ${WP_PORT}:${WP_PORT}
+    build:
+      context: $ABSOLUTE_PATH/requirements/wordpress
+      dockerfile: Dockerfile
+      args:
+        - WP_PHP_USER=$WP_PHP_USER
+        - WP_PHP_GROUP=$WP_PHP_GROUP
+    image: $WP_IMAGE_NAME
     container_name: wordpress
     env_file: .env
     volumes:
-      - wordpress:/var/www/wordpress
+      - inception_wordpress_volume:/var/www/html
     networks:
-      - inception
-    build:
-      context: ./requirements/wordpress/.
-      dockerfile: Dockerfile
+      - $NETWORK_NAME
     depends_on: # wordpress needs to wait for the database to be init
       - mariadb
-    restart: on-failure
+    healthcheck:
+        test: ["CMD-SHELL", "curl --silent --fail http://localhost || exit 1"]
+        interval: 30s
+        timeout: 10s
+        retries: 3
+    restart: always
 
 volumes:
     inception_mariadb_volume:
