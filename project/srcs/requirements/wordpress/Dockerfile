@@ -1,34 +1,95 @@
 FROM debian:buster
 
-# Install basic requirements
-RUN apt update -y
-RUN apt upgrade -y
-RUN apt install vim -y
+ARG 		WP_PHP_USER
+ARG 		WP_PHP_GROUP
 
-#Install wget and php
-RUN apt-get -y install wget
-RUN apt-get install -y php7.3
-RUN apt-get install -y php-fpm
-RUN apt-get install -y php-mysql
-RUN apt-get install -y mariadb-client
+ENV 		WP_PHP_USER=$WP_PHP_USER
+ENV 		WP_PHP_GROUP=$WP_PHP_GROUP
 
-#Install WordPress (PATH = /var/www as it's the main folder for NGINX)
-RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
+# Install all requirements
 
-#Extract WordPress
-RUN cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
-RUN chown -R root:root /var/www/wordpress
+RUN			apk update && apk upgrade && apk add --no-cache \
+				wget				\
+				tar                 \
+				mariadb-client		\
+				redis				\
+				curl 				\
+				php7				\
+				php7-fpm			\
+				php7-bcmath			\
+				php7-bz2 			\
+				php7-calendar		\
+				php7-cgi			\
+				php7-ctype			\
+				php7-common			\
+				php7-curl			\
+				php7-gettext		\
+				php7-dom			\
+				php7-exif			\
+				php7-fileinfo		\
+				php7-gd				\
+				php7-gmagick		\
+				php7-gmp			\
+				php7-iconv			\
+				php7-imap			\
+				php7-intl			\
+				php7-json			\
+				php7-mbstring		\
+				php7-mcrypt			\
+				php7-memcache		\
+				php7-mysqli			\
+				php7-mysqlnd		\
+				php7-ldap			\
+				php7-opcache		\
+				php7-openssl		\
+				php7-pcntl			\
+				php7-pdo			\
+				php7-pdo_mysql		\
+				php7-pdo_pgsql		\
+				php7-pdo_sqlite 	\
+				php7-pgsql			\
+				php7-phar			\
+				php7-posix			\
+				php7-redis			\	
+				php7-session		\
+				php7-shmop			\
+				php7-simplexml		\
+				php7-soap			\
+				php7-sockets		\
+				php7-sodium			\
+				php7-sqlite3		\
+				php7-sysvsem		\
+				php7-sysvshm		\
+				php7-tokenizer		\
+				php7-xml			\
+				php7-xmlreader		\
+				php7-xmlrpc			\
+				php7-xmlwriter		\
+				php7-xsl			\
+				php7-zip			\
+				php7-zlib			\
+				gettext
 
-#Copy my php config
-COPY conf/php.ini	/etc/php/7.3/cli/php.ini
+#Add php user
 
-#Time to config wordpress, install a CLI to config it quickly
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-RUN chmod +x wp-cli.phar
-RUN mv wp-cli.phar /usr/local/bin/wp
+RUN 		adduser -S $WP_PHP_USER && addgroup -S $WP_PHP_GROUP
 
-#Run the config script
-COPY tools/auto_config.sh /home/
-RUN chmod +x /home/auto_config.sh
-ENTRYPOINT [ "/home/auto_config.sh" ]
 
+#Copy my conf
+
+COPY		./conf/* ./
+
+#Install CLI
+
+RUN			curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN			chmod +x wp-cli.phar
+RUN			mv -f wp-cli.phar /usr/local/bin/wp
+
+#Run script
+
+RUN			chmod 777 auto_config.sh
+ENTRYPOINT	["sh", "auto_config.sh"]
+
+CMD			["php-fpm7", "-F"]
+
+EXPOSE		$WP_PORT
