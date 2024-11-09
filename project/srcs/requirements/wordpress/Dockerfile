@@ -8,7 +8,7 @@ ENV 		WP_PHP_GROUP=$WP_PHP_GROUP
 
 # Install all requirements
 
-RUN			apt update -y && apt upgrade -y && apt add --no-cache -y \
+RUN			apt update -y && apt upgrade -y && apt-get install -y \
 				wget				\
 				tar                 \
 				mariadb-client		\
