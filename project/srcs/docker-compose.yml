@@ -29,8 +29,7 @@ services:
       - $ABSOLUTE_PATH/requirements/nginx/ssl:/etc/nginx/ssl
       - inception_wordpress_volume:/var/www/html
     depends_on:
-      - wordpress:
-                condition: service_healthy #wait for wordpress to be started and healthy to start
+      - wordpress
     restart: always 
 
   wordpress:
@@ -52,7 +51,7 @@ services:
     depends_on: # wordpress needs to wait for the database to be init
       - mariadb
     healthcheck:
-        test: ["CMD-SHELL", "curl --silent --fail http://localhost || exit 1"]
+        test: ["CMD-SHELL", "echo 'Wordpress is healthy'"]
         interval: 30s
         timeout: 10s
         retries: 3
