@@ -1,6 +1,6 @@
 version: '3'
 services:
-  
+
   mariadb:
       ports: 
           - ${DB_PORT}:${DB_PORT}
@@ -46,19 +46,23 @@ services:
     restart: on-failure
 
 volumes:
-  wordpress:
-    driver: local #we stock the volumes in local to avoid losing data if the services happens to crash
-    driver_opts:
-      type: none
-      o: bind # mount type, bind is accessible by other process
-      device: /home/zfavere/data/wordpress #local path to store data
-  mariadb:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/zfavere/data/mariadb
+    inception_mariadb_volume:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: $ABSOLUTE_PATH$DB_VOLUME_PATH
+        name: $DB_VOLUME_NAME
+
+    inception_wordpress_volume:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: $ABSOLUTE_PATH$WP_VOLUME_PATH
+        name: $WP_VOLUME_NAME
 
 networks:
   inception:
+    name: $NETWORK_NAME
     driver: bridge #automatic docker config to make the containers communicate in bridge
