@@ -10,7 +10,7 @@ ls /var/www/html
 
 wp core download --allow-root --path="/var/www/html"
 # Downloads the WordPress core files into '/var/www/html' as the root user
-# --allow-root allows running WP-CLI as root (not recommended for production)
+# --allow-root allows running WP-CLI as root
 
 rm -f /var/www/html/wp-config.php7
 # Removes any existing 'wp-config.php7' file in '/var/www/html' to prevent conflicts
