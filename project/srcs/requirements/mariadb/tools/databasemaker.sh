@@ -41,4 +41,4 @@ EOF
 fi
 
 # Start MariaDB
-service mysql start
+#service mysql start
