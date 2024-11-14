@@ -40,8 +40,8 @@ EOF
     rm -f $tfile
 fi
 # Config mariadb to allow external connections & uncommenting skip-networking in mdb conf
-sed -i "s|skip-networking|# skip-networking|g" /etc/mysql/mariadb.conf.d/
-sed -i "s|.*bind-address\s*=.*|bind-address=0.0.0.0|g" /etc/mysql/mariadb.conf.d/
+sed -i "s|skip-networking|# skip-networking|g" /etc/mysql/mariadb.conf.d/50-server.cnf
+sed -i "s|.*bind-address\s*=.*|bind-address=0.0.0.0|g" /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Start MariaDB
 service mysql start
