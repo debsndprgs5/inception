@@ -1,11 +1,11 @@
 FROM debian:buster
 
 # Declare build arguments and set environment variables
-#ARG WP_PHP_USER
-#ARG WP_PHP_GROUP
+ARG 		WP_PHP_USER
+ARG 		WP_PHP_GROUP
 
-ENV WP_PHP_USER=${WP_PHP_USER}
-ENV WP_PHP_GROUP=${WP_PHP_GROUP}
+ENV 		WP_PHP_USER=$WP_PHP_USER
+ENV 		WP_PHP_GROUP=$WP_PHP_GROUP
 
 # Install all requirements
 
@@ -71,8 +71,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 #Add php user
 
 RUN echo "Using WP_PHP_USER=$WP_PHP_USER and WP_PHP_GROUP=$WP_PHP_GROUP" && \
-    groupadd "$WP_PHP_GROUP" && \
-    useradd -s /sbin/nologin --system -g "$WP_PHP_GROUP" "$WP_PHP_USER"
+    groupadd $WP_PHP_GROUP && \
+    useradd -s /sbin/nologin --system -g $WP_PHP_GROUP $WP_PHP_USER
 
 
 
