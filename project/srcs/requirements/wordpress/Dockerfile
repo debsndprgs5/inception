@@ -9,8 +9,6 @@ ENV 		WP_PHP_GROUP=$WP_PHP_GROUP
 
 # Install all requirements
 
-FROM debian:latest
-
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     wget \
     tar \
