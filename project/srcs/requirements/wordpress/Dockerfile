@@ -1,14 +1,13 @@
 FROM debian:buster
 
-ARG 		WP_PHP_USER
-ARG 		WP_PHP_GROUP
+# Declare build arguments and set environment variables
+ARG WP_PHP_USER
+ARG WP_PHP_GROUP
 
-ENV 		WP_PHP_USER=$WP_PHP_USER
-ENV 		WP_PHP_GROUP=$WP_PHP_GROUP
+ENV WP_PHP_USER=${WP_PHP_USER}
+ENV WP_PHP_GROUP=${WP_PHP_GROUP}
 
 # Install all requirements
-
-FROM debian:latest
 
 FROM debian:latest
 
