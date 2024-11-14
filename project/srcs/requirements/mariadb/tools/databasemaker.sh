@@ -39,9 +39,6 @@ EOF
     /usr/bin/mysqld --user=mysql --bootstrap < $tfile
     rm -f $tfile
 fi
-# Config mariadb to allow external connections & uncommenting skip-networking in mdb conf
-sed -i "s|skip-networking|# skip-networking|g" /etc/my.cnf.d/mariadb-server.cnf
-sed -i "s|.*bind-address\s*=.*|bind-address=0.0.0.0|g" /etc/my.cnf.d/mariadb-server.cnf
 
 # Start MariaDB
 service mysql start
