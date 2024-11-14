@@ -6,6 +6,8 @@ RUN apt upgrade -y
 RUN apt install nginx -y
 RUN apt install vim -y
 
+WORKDIR /var/www/html
+
 # Create folder to keep the key/certificate for TSL secure connection
 
 RUN mkdir -p /etc/nginx/ssl
@@ -33,20 +35,10 @@ RUN apt install openssl -y
 
 RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/nginx/ssl/inception.key -subj "/C=FR/ST=PACA/L=Nice/O=42/OU=42Nice/CN=zfavere.42.fr/UID=zfavere@student.42nice.fr"
 
-# Create folder to store NGINX config files
+COPY    ./conf/default.template /etc/nginx/http.d/default.template
 
-RUN mkdir -p /var/run/nginx
+COPY    ./conf/entrypoint.sh /entrypoint.sh
+RUN     chmod +x /entrypoint.sh
+CMD     ["sh", "/entrypoint.sh"]
 
-# Copy original NGINX config file to modify it later
-
-COPY conf/nginx.conf /etc/nginx/nginx.conf
-
-# Assert dominance
-
-RUN chmod 755 /var/www/html #Main root
-RUN chown -R www-data:www-data /var/www/html #Main user
-
-# Start NGINX
-
-CMD [ "nginx", "-g", "daemon off;" ]
-
+EXPOSE  $NGINX_PORT
