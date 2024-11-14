@@ -71,7 +71,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 
 #Add php user
 
-RUN 		adduser -S $WP_PHP_USER && addgroup -S $WP_PHP_GROUP
+RUN addgroup --system $WP_PHP_GROUP && \
+    adduser --system --ingroup $WP_PHP_GROUP $WP_PHP_USER
 
 
 #Copy my conf
