@@ -1,44 +1,41 @@
 #!/bin/bash
 
 envsubst '${WP_PHP_USER} ${WP_PHP_GROUP} ${WP_PHP_LISTEN_OWNER} ${WP_PHP_LISTEN_GROUP}' < ./www.conf.template > ./www.conf
-# Replaces environment variables within the 'www.conf.template' file with their values
-# (like WP_PHP_USER, WP_PHP_GROUP, etc.) and outputs the result to 'www.conf'
 
 chmod 777 /var/www/html
 
-ls /var/www/html
+# Check if WordPress is already downloaded
+if [ ! -f /var/www/html/wp-config.php ]; then
+    echo "Downloading WordPress core..."
+    wp core download --allow-root --path="/var/www/html"
+else
+    echo "WordPress core already present, skipping download."
+fi
 
-wp core download --allow-root --path="/var/www/html"
-# Downloads the WordPress core files into '/var/www/html' as the root user
-# --allow-root allows running WP-CLI as root
-
+# Remove any existing 'wp-config.php7'
 rm -f /var/www/html/wp-config.php7
-# Removes any existing 'wp-config.php7' file in '/var/www/html' to prevent conflicts
 
-rm -f /etc/php7/php-fpm.d/www.conf
-# Removes any existing 'www.conf' configuration file for PHP-FPM to avoid conflicts
-
+# Check and create PHP-FPM directory if necessary
+mkdir -p /etc/php/7.3/fpm/pool.d/
 cp ./wp-config.php /var/www/html/wp-config.php
-# Copies a prepared 'wp-config.php' file from the current directory to '/var/www/html'
-# This file is required by WordPress to connect to the database and set configuration options
+cp ./www.conf /etc/php/7.3/fpm/pool.d/www.conf
 
-cp ./www.conf /etc/php7/php-fpm.d/www.conf
-# Copies the customized 'www.conf' to the PHP-FPM configuration directory
-# This file sets PHP-FPM settings for WordPress
+# Wait for the database to be ready
+until mysqladmin ping -h"$DB_HOST" --silent; do
+    echo "Waiting for database connection..."
+    sleep 2
+done
 
-wp core install --url=${DOMAIN_NAME} --title="Inception" --admin_user=${WP_ADMIN} --admin_password=${WP_ADMIN_PWD} --admin_email=${WP_ADMIN_EMAIL} --path="/var/www/html" --allow-root --skip-email
-# Installs WordPress using the WP-CLI with the provided configuration:
-# - 'url' is set by the DOMAIN_NAME environment variable
-# - 'title' is set to "Inception"
-# - 'admin_user', 'admin_password', and 'admin_email' are set from environment variables
-# - --path specifies the directory where WordPress is installed
-# - --allow-root allows WP-CLI to run as root
-# - --skip-email skips sending the admin welcome email
+# Install WordPress core if not already installed
+if ! wp core is-installed --path="/var/www/html" --allow-root; then
+    echo "Installing WordPress..."
+    wp core install --url=${DOMAIN_NAME} --title="Inception" --admin_user=${WP_ADMIN} --admin_password=${WP_ADMIN_PWD} --admin_email=${WP_ADMIN_EMAIL} --path="/var/www/html" --allow-root --skip-email
+else
+    echo "WordPress already installed."
+fi
 
-wp --allow-root user create ${MDB_USER} ${WP_USER_EMAIL} --role="author" --user_pass=${MDB_USER_PWD} --path="/var/www/html"
-# Creates a new WordPress user with the provided username (MDB_USER), email (WP_USER_EMAIL), and password (MDB_USER_PWD)
-# The user's role is set to "author"
-# --path specifies the WordPress directory, and --allow-root permits WP-CLI to run as root
+# Create WordPress user if it doesn’t exist
+wp --allow-root user create ${MDB_USER} ${WP_USER_EMAIL} --role="author" --user_pass=${MDB_USER_PWD} --path="/var/www/html" || echo "User already exists."
 
-$@
-# Executes any additional arguments passed to the script at runtime, allowing flexible usage of the script for various commands
+# Start PHP-FPM
+php-fpm7.3 -D
