@@ -39,7 +39,7 @@ services:
       context: $ABSOLUTE_PATH/requirements/wordpress
       dockerfile: Dockerfile
       args:
-        WP_PHP_USER: ${WP_PHP_USER}
+        WP_PHP_USER: $WP_PHP_USER
         WP_PHP_GROUP: ${WP_PHP_GROUP}
     image: $WP_IMAGE_NAME
     container_name: wordpress
