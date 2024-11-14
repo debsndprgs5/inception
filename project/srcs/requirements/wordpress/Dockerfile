@@ -70,8 +70,10 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 
 #Add php user
 
-RUN addgroup "$WP_PHP_GROUP" && \
-    adduser --system --ingroup "$WP_PHP_GROUP" "$WP_PHP_USER"
+RUN echo "Using WP_PHP_USER=$WP_PHP_USER and WP_PHP_GROUP=$WP_PHP_GROUP" && \
+    groupadd "$WP_PHP_GROUP" && \
+    useradd -s /sbin/nologin --system -g "$WP_PHP_GROUP" "$WP_PHP_USER"
+
 
 
 
