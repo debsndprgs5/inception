@@ -10,6 +10,8 @@ ENV 		WP_PHP_GROUP=$WP_PHP_GROUP
 
 FROM debian:latest
 
+FROM debian:latest
+
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     wget \
     tar \
@@ -25,26 +27,21 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     php-ctype \
     php-common \
     php-curl \
-    php-gettext \
     php-dom \
     php-exif \
     php-fileinfo \
     php-gd \
     php-imagick \
     php-gmp \
-    php-iconv \
     php-imap \
     php-intl \
     php-json \
     php-mbstring \
-    php-mcrypt \
     php-memcached \
     php-mysqli \
     php-mysql \
     php-ldap \
     php-opcache \
-    php-openssl \
-    php-pcntl \
     php-pdo \
     php-pdo-mysql \
     php-pdo-pgsql \
@@ -53,12 +50,10 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     php-phar \
     php-posix \
     php-redis \
-    php-session \
     php-shmop \
     php-simplexml \
     php-soap \
     php-sockets \
-    php-sodium \
     php-sqlite3 \
     php-sysvsem \
     php-sysvshm \
@@ -69,9 +64,9 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     php-xmlwriter \
     php-xsl \
     php-zip \
-    php-zlib \
     gettext \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 
 #Add php user
