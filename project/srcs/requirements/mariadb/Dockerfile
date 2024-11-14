@@ -11,7 +11,7 @@ RUN apt-get install mariadb-server -y
 RUN apt-get install mariadb-client -y
 
 # Copy my version of mysql config files to the container
-# COPY conf/50-server.cnf	/etc/mysql/mariadb.conf.d/50-server.cnf
+COPY conf/50-server.cnf	/etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Copy the script to create the database to the container
 COPY tools/databasemaker.sh	/home/
