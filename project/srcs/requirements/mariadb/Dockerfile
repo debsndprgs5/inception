@@ -3,14 +3,18 @@ FROM debian:buster
 # Install basic requirements
 RUN apt update -y
 RUN apt upgrade -y
-RUN apt install vim -y
-RUN apt-get install apt-utils -y
-RUN apt-get install nginx -y
+RUN apt-get install -y mariadb-server \
+    mariadb-client \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install MariaDB
-RUN apt-get install mariadb-server -y
-RUN apt-get install mariadb-client -y
+#Allow to run the daemon of mysql
+# Purge and re-create /var/lib/mysql with appropriate ownership
+# ensure that /var/run/mysqld (used for socket and lock files) is writable regardless of the UID our mysqld instance ends up having at runtime
 
+RUN mkdir -p /var/run/mysqld \
+&& chown -R mysql:mysql /var/run/mysqld \
+&& chmod 777 /var/run/mysqld
 
 # Copy my version of mysql config files to the container
 # COPY conf/mariadb-server.cnf /etc/my.cnf.d/mariadb-server.cnf
