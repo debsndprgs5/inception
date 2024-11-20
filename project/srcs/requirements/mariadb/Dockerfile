@@ -3,7 +3,7 @@ FROM debian:buster
 # Install basic requirements
 RUN apt update -y
 RUN apt upgrade -y
-RUN apt-get install -y mariadb-server \
+RUN apt install -y mariadb-server \
     mariadb-client \
     vim \
     && rm -rf /var/lib/apt/lists/*
