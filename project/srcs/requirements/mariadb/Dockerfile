@@ -8,7 +8,6 @@ RUN apt-get install apt-utils -y
 
 # Install MariaDB
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install mariadb-server -y
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install mariadb-client -y
 
 
 # Copy my version of mysql config files to the container
