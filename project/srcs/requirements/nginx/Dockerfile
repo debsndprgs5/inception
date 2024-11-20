@@ -3,8 +3,7 @@ FROM debian:buster
 # Install basic requirements
 RUN apt update -y
 RUN apt upgrade -y
-RUN apt install nginx -y
-RUN apt install vim -y
+RUN apt-get install nginx -y
 
 WORKDIR /var/www/html
 
