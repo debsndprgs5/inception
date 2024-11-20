@@ -13,7 +13,7 @@ RUN mkdir -p /etc/nginx/ssl
 
 # Install OpenSSL for SSL certificate creation and management
 
-RUN apt install openssl -y
+RUN apt-get install openssl -y
 
 # Generate SSL certificate (needed to make TSL/SSL certif)
 #-------------------------------------------------------

@@ -5,9 +5,12 @@ RUN apt update -y
 RUN apt upgrade -y
 RUN apt install vim -y
 
+WORKDIR /var/www/html
+
 # Install MariaDB
 RUN apt-get install mariadb-server -y
 RUN apt-get install mariadb-client -y
+
 
 # Copy my version of mysql config files to the container
 # COPY conf/mariadb-server.cnf /etc/my.cnf.d/mariadb-server.cnf
