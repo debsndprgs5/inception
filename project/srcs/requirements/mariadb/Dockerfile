@@ -4,8 +4,7 @@ FROM debian:buster
 RUN apt update -y
 RUN apt upgrade -y
 RUN apt install vim -y
-
-WORKDIR /var/www/html
+RUN apt-get install apt-utils -y
 
 # Install MariaDB
 RUN apt-get install mariadb-server -y
