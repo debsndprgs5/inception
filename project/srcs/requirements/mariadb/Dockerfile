@@ -16,7 +16,7 @@ RUN apt-get install mariadb-client -y
 # COPY conf/mariadb-server.cnf /etc/my.cnf.d/mariadb-server.cnf
 
 # Copy the script to create the database to the container
-# COPY tools/databasemaker.sh	/home/
+COPY tools/databasemaker.sh	/home/
 RUN chmod +x /home/databasemaker.sh
 
 # Start the script to create the database
