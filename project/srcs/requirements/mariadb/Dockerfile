@@ -2,10 +2,10 @@ FROM debian:buster
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install basic requirements
-RUN apt update -y
-RUN apt upgrade -y
-RUN apt install apt-utils -y
-RUN apt install -y mariadb-server \
+RUN apt-get update -y
+RUN apt-get upgrade -y
+RUN apt-get install apt-utils -y
+RUN apt-get install -y mariadb-server \
     mariadb-client \
     vim \
     && rm -rf /var/lib/apt/lists/*
