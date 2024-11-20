@@ -1,4 +1,5 @@
 FROM debian:buster
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install basic requirements
 RUN apt update -y
