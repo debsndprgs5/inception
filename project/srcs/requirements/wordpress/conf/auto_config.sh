@@ -35,7 +35,7 @@ else
 fi
 
 # Create WordPress user if it doesn’t exist
-wp --allow-root user create ${MDB_USER} ${WP_USER_EMAIL} --role="author" --user_pass=${MDB_USER_PWD} --path="/var/www/html" || echo "User already exists."
+wp --allow-root user create ${DB_USER} ${WP_USER_EMAIL} --role="author" --user_pass=${DB_USER_PWD} --path="/var/www/html" || echo "User already exists."
 
 # Start PHP-FPM
 php-fpm7.3 -D

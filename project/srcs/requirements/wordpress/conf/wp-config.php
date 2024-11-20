@@ -1,9 +1,9 @@
 <?php
 
-define( 'DB_NAME', getenv( 'MDB_NAME' ) );
-define( 'DB_USER', getenv( 'MDB_USER' ) );
-define( 'DB_PASSWORD', getenv( 'MDB_USER_PWD' ) );
-define( 'DB_HOST', getenv('WP_MDB_HOST') . ':' . getenv('MDB_PORT')); 
+define( 'DB_NAME', getenv( 'DB_NAME' ) );
+define( 'DB_USER', getenv( 'DB_USER' ) );
+define( 'DB_PASSWORD', getenv( 'DB_USER_PWD' ) );
+define( 'DB_HOST', getenv('WP_DB_HOST') . ':' . getenv('DB_PORT')); 
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', 'utf8_bin' );
 
