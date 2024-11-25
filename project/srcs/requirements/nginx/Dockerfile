@@ -1,4 +1,5 @@
 
+
 FROM	debian:buster
 
 #install all the program
@@ -31,13 +32,16 @@ RUN apt-get install openssl -y
 
 RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/nginx/ssl/inception.key -subj "/C=FR/ST=PACA/L=Nice/O=42/OU=42Nice/CN=zfavere.42.fr/UID=zfavere@student.42nice.fr"
 
-COPY ./conf/nginx.conf /etc/nginx/conf.d
+COPY ./conf/nginx.conf /etc/nginx/conf.d/nginx.conf
 
 # nginx config
 RUN mkdir -p /run/nginx
 
 #the only port allowed
 EXPOSE	443
+
+RUN envsubst '${DOMAIN_NAME} ${NGINX_PORT} ${WP_PORT}' < /etc/nginx/conf.d/nginx.conf
+
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
