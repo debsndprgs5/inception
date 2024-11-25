@@ -1,13 +1,10 @@
-FROM debian:buster
 
-# Install basic requirements
-RUN apt-get update -y
-RUN apt-get upgrade -y
-RUN apt-get install nginx -y
+FROM	debian:buster
 
-WORKDIR /var/www/html
-
-# Create folder to keep the key/certificate for TSL secure connection
+#install all the program
+RUN		apt-get update
+RUN		apt-get install -y nginx \
+                openssl
 
 RUN mkdir -p /etc/nginx/ssl
 
@@ -34,10 +31,13 @@ RUN apt-get install openssl -y
 
 RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/nginx/ssl/inception.key -subj "/C=FR/ST=PACA/L=Nice/O=42/OU=42Nice/CN=zfavere.42.fr/UID=zfavere@student.42nice.fr"
 
-COPY    ./conf/default.template /etc/nginx/http.d/default.template
+COPY ./conf/nginx.conf /etc/nginx/conf.d
 
-COPY    ./conf/entrypoint.sh /entrypoint.sh
-RUN     chmod +x /entrypoint.sh
-CMD     ["sh", "/entrypoint.sh"]
+# nginx config
+RUN mkdir -p /run/nginx
 
-EXPOSE  $NGINX_PORT
+#the only port allowed
+EXPOSE	443
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
