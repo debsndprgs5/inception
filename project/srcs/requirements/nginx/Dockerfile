@@ -34,6 +34,7 @@ RUN openssl req -x509 -nodes -out /etc/nginx/ssl/zfavere.crt -keyout /etc/nginx/
 
 COPY ./conf/nginx.conf /etc/nginx/conf.d/
 RUN ls /etc/nginx/conf.d
+RUN ls /etc/nginx/ssl
 
 # nginx config
 RUN mkdir -p /run/nginx
