@@ -30,7 +30,7 @@ RUN apt-get install openssl -y
 # UID = Mail address
 #-------------------------------------------------------
 
-RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/nginx/ssl/inception.key -subj "/C=FR/ST=PACA/L=Nice/O=42/OU=42Nice/CN=zfavere.42.fr/UID=zfavere@student.42nice.fr"
+RUN openssl req -x509 -nodes -out /etc/nginx/ssl/zfavere.crt -keyout /etc/nginx/ssl/zfavere.key -subj "/C=FR/ST=PACA/L=Nice/O=42/OU=42Nice/CN=zfavere.42.fr/UID=zfavere@student.42nice.fr"
 
 COPY ./conf/nginx.conf /etc/nginx/conf.d/
 
