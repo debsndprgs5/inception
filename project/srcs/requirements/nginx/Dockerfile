@@ -33,6 +33,7 @@ RUN apt-get install openssl -y
 RUN openssl req -x509 -nodes -out /etc/nginx/ssl/zfavere.crt -keyout /etc/nginx/ssl/zfavere.key -subj "/C=FR/ST=PACA/L=Nice/O=42/OU=42Nice/CN=zfavere.42.fr/UID=zfavere@student.42nice.fr"
 
 COPY ./conf/nginx.conf /etc/nginx/conf.d/
+RUN ls /etc/nginx/conf.d
 
 # nginx config
 RUN mkdir -p /run/nginx
