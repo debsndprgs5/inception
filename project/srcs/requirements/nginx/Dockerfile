@@ -13,27 +13,9 @@ RUN mkdir -p /etc/nginx/ssl
 
 RUN apt-get install openssl -y
 
-# Generate SSL certificate (needed to make TSL/SSL certif)
-#-------------------------------------------------------
-# req = generate certif
-# -x509 = certif type
-# -nodes = no password asked
-# -out = path to where the certif will be saved
-# -keyout = path to where the certif key will be saved
-# -subj = adds mandatory informations for certificate as :
-# C = Country ID (FR)
-# ST = State (PACA)
-# L = City (Nice)
-# O = Organization name (42)
-# OU = Organization Unit Name (42Nice)
-# CN = Common Name (zfavere.42.fr)
-# UID = Mail address
-#-------------------------------------------------------
-
-RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
-       -out /etc/nginx/ssl/zfavere.crt \
-       -keyout /etc/nginx/ssl/zfavere.key \
-       -subj "/C=FR/ST=PACA/L=Nice/O=42/OU=42Nice/CN=zfavere.42.fr/UID=zfavere@student.42nice.fr"
+#Transfer my SSL keys
+COPY ./ssl/zfavere.crt /etc/nginx/ssl/
+COPY ./ssl/zfavere.key /etc/nginx/ssl/
 
 COPY ./conf/nginx.conf /etc/nginx/conf.d/
 RUN ls /etc/nginx/conf.d
