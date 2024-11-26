@@ -10,7 +10,7 @@ build:
 	@echo "Creating & starting containers..."
 	@mkdir -p $(ABSOLUTE_PATH)$(DB_VOLUME_PATH) $(ABSOLUTE_PATH)$(WP_VOLUME_PATH)
 	@chmod 777 $(ABSOLUTE_PATH)$(DB_VOLUME_PATH) $(ABSOLUTE_PATH)$(WP_VOLUME_PATH)
-	@docker-compose -f $(ABSOLUTE_PATH)/docker-compose.yml up --build -d -it
+	@docker-compose -f $(ABSOLUTE_PATH)/docker-compose.yml up --build -d
 
 # Additional targets
 
