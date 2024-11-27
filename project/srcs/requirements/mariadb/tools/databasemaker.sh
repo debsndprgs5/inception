@@ -1,42 +1,27 @@
 #!/bin/sh
 
-mysql_install_db
+# Initialisation de la base de données
+mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
-/etc/init.d/mysql start
+# Démarrage de MariaDB en arrière-plan
+mysqld_safe --datadir=/var/lib/mysql &
+sleep 5
 
-#Check if the database exists
-
-if [ -d "/var/lib/mysql/$DB_NAME" ]
-then 
-
+# Vérifier si la base de données existe
+if [ -d "/var/lib/mysql/$DB_NAME" ]; then
     echo "Database already exists"
 else
+    echo "Setting up the database..."
 
-# Set root option so that connexion without root password is not possible
+    # Définir un mot de passe root sécurisé
+    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PWD'; FLUSH PRIVILEGES;" | mysql -u root
 
-mysql_secure_installation << _EOF_
+    # Ajouter un utilisateur root pour les connexions distantes
+    echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$DB_ROOT_PWD'; FLUSH PRIVILEGES;" | mysql -u root
 
-Y
-root4life
-root4life
-Y
-n
-Y
-Y
-_EOF_
-
-#Add a root user on 127.0.0.1 to allow remote connexion 
-#Flush privileges allow to your sql tables to be updated automatically when you modify it
-#mysql -uroot launch mysql command line client
-echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$DB_ROOT_PWD'; FLUSH PRIVILEGES;" | mysql -uroot
-
-#Create database and user in the database for wordpress
-
-echo "CREATE DATABASE IF NOT EXISTS $DB_NAME; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PWD'; FLUSH PRIVILEGES;" | mysql -u root
-
-
+    # Créer la base de données et un utilisateur associé
+    echo "CREATE DATABASE IF NOT EXISTS $DB_NAME; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PWD'; FLUSH PRIVILEGES;" | mysql -u root
 fi
 
-/etc/init.d/mysql stop
-
-exec "$@"
+# Garder MariaDB actif
+wait
