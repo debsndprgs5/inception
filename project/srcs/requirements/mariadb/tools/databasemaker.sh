@@ -13,16 +13,14 @@ if [ -d "/var/lib/mysql/$DB_NAME" ]; then
 else
     echo "Setting up the database..."
 
-    # Configurer un mot de passe root explicite
-    echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PWD'; FLUSH PRIVILEGES;" | mysql -u root
-
-    # Ajouter un utilisateur root distant
-    echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$DB_ROOT_PWD'; FLUSH PRIVILEGES;" | mysql -u root -p$DB_ROOT_PWD
-
-    # Créer une base de données et un utilisateur associé
-    echo "CREATE DATABASE IF NOT EXISTS $DB_NAME; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PWD'; FLUSH PRIVILEGES;" | mysql -u root -p$DB_ROOT_PWD
-
+    echo "CREATE DATABASE IF NOT EXISTS '$DB_NAME'" | mysql -u root
+    echo "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PWD'" | mysql -u root
+    echo "GRANT ALL PRIVILEGES ON '$DB_NAME'.* TO '$DB_USER'@'%';" | mysql -u root
+    echo "FLUSH PRIVILEGES" | mysql -u root
+    echo "ALTER USER '$DB_ROOT'@'localhost' IDENTIFIED BY '$DB_ROOT_PWD';" | mysql -u root
+    
 fi
 
 # Garder MariaDB actif
 wait
+
