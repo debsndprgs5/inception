@@ -13,12 +13,12 @@ if [ -d "/var/lib/mysql/$DB_NAME" ]; then
 else
     echo "Setting up the database..."
 
-    echo "CREATE DATABASE IF NOT EXISTS '$DB_NAME'" | mysql -u root
+    echo "CREATE DATABASE IF NOT EXISTS $DB_NAME" | mysql -u root
     echo "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PWD'" | mysql -u root
     echo "GRANT ALL PRIVILEGES ON '$DB_NAME'.* TO '$DB_USER'@'%';" | mysql -u root
     echo "FLUSH PRIVILEGES" | mysql -u root
     echo "ALTER USER '$DB_ROOT'@'localhost' IDENTIFIED BY '$DB_ROOT_PWD';" | mysql -u root
-    
+
 fi
 
 # Garder MariaDB actif
