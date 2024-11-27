@@ -12,7 +12,7 @@ RUN apt-get install -y mariadb-server \
 
 RUN mkdir -p /var/run/mysqld \
 && chown -R mysql:mysql /var/run/mysqld \
-&& chmod 777 /var/run/mysqld
+&& chmod 775 /var/run/mysqld
 
 EXPOSE 3306
 
@@ -25,9 +25,9 @@ EXPOSE 3306
 # Give the right to execute + launch the .sh
 
 COPY ./tools/databasemaker.sh /usr/local/bin/
-# COPY ./conf/wordpress.sql /usr/local/bin/
+COPY ./conf/wordpress.sql /usr/local/bin/
 RUN chmod +x /usr/local/bin/databasemaker.sh
-# RUN chmod +x /usr/local/bin/wordpress.sql
+RUN chmod +x /usr/local/bin/wordpress.sql
 
 ENTRYPOINT [ "/usr/local/bin/databasemaker.sh" ]
 

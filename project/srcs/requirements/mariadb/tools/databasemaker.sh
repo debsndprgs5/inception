@@ -1,43 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 
-mysql_install_db
 
-/etc/init.d/mysql start
 
-#Check if the database exists
+service mysql start 
 
-if [ -d "/var/lib/mysql/mysql" ]
-then 
-    echo "Database already exists"
-else
 
-# Set root option so that connexion without root password is not possible
+echo "CREATE DATABASE IF NOT EXISTS $db1_name ;" > db1.sql
+echo "CREATE USER IF NOT EXISTS '$db1_user'@'%' IDENTIFIED BY '$db1_pwd' ;" >> db1.sql
+echo "GRANT ALL PRIVILEGES ON $db1_name.* TO '$db1_user'@'%' ;" >> db1.sql
+echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '12345' ;" >> db1.sql
+echo "FLUSH PRIVILEGES;" >> db1.sql
 
-mysql_secure_installation << _EOF_
+mysql < db1.sql
 
-Y
-root4life
-root4life
-Y
-n
-Y
-Y
-_EOF_
+kill $(cat /var/run/mysqld/mysqld.pid)
 
-#Add a root user on 127.0.0.1 to allow remote connexion 
-#Flush privileges allow to your sql tables to be updated automatically when you modify it
-#mysql -uroot launch mysql command line client
-echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$DB_ROOT_PWD'; FLUSH PRIVILEGES;" | mysql -uroot
-
-#Create database and user in the database for wordpress
-
-echo "CREATE DATABASE IF NOT EXISTS $DB_NAME; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PWD'; FLUSH PRIVILEGES;" | mysql -u root
-
-#Import database in the mysql command line
-mysql -uroot -p$DB_ROOT_PWD $DB_NAME < /usr/local/bin/wordpress.sql
-
-fi
-
-/etc/init.d/mysql stop
-
-exec "$@"
+mysqld
