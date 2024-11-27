@@ -34,8 +34,6 @@ echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$DB_ROOT_PWD'; FLUSH PRIVILE
 
 echo "CREATE DATABASE IF NOT EXISTS $DB_NAME; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PWD'; FLUSH PRIVILEGES;" | mysql -u root
 
-#Import database in the mysql command line
-mysql -uroot -p$DB_ROOT_PWD $DB_NAME < /usr/local/bin/wordpress.sql
 
 fi
 
