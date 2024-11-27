@@ -21,7 +21,7 @@ cp ./wp-config.php /var/www/html/wp-config.php
 cp ./www.conf /etc/php/7.3/fpm/pool.d/www.conf
 
 # Wait for the database to be ready
-until mysqladmin ping -h"$DB_HOST" --silent; do
+until mysqladmin ping -h mariadb --silent; do
     echo "Waiting for database connection..."
     sleep 2
 done
