@@ -1,9 +1,9 @@
 #!/bin/sh
 
-# Initialisation de la base de données
+# Initialisation de MariaDB
 mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
-# Démarrage de MariaDB en arrière-plan
+# Démarrer MariaDB
 mysqld_safe --datadir=/var/lib/mysql &
 sleep 5
 
@@ -13,14 +13,15 @@ if [ -d "/var/lib/mysql/$DB_NAME" ]; then
 else
     echo "Setting up the database..."
 
-    # Définir un mot de passe root sécurisé
+    # Configurer un mot de passe root explicite
     echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PWD'; FLUSH PRIVILEGES;" | mysql -u root
 
-    # Ajouter un utilisateur root pour les connexions distantes
-    echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$DB_ROOT_PWD'; FLUSH PRIVILEGES;" | mysql -u root
+    # Ajouter un utilisateur root distant
+    echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$DB_ROOT_PWD'; FLUSH PRIVILEGES;" | mysql -u root -p$DB_ROOT_PWD
 
-    # Créer la base de données et un utilisateur associé
-    echo "CREATE DATABASE IF NOT EXISTS $DB_NAME; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PWD'; FLUSH PRIVILEGES;" | mysql -u root
+    # Créer une base de données et un utilisateur associé
+    echo "CREATE DATABASE IF NOT EXISTS $DB_NAME; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PWD'; FLUSH PRIVILEGES;" | mysql -u root -p$DB_ROOT_PWD
+
 fi
 
 # Garder MariaDB actif
