@@ -21,6 +21,6 @@ else
 	cp wp-config-sample.php wp-config.php
 fi
 
-envsubst '${WP_PHP_USER} ${WP_PHP_GROUP} ${WP_PHP_LISTEN_OWNER} ${WP_PHP_LISTEN_GROUP}' < /etc/php/7.3/fpm/pool.d/www.conf > /etc/php/7.3/fpm/pool.d/www.conf
+envsubst '${WP_PHP_USER} ${WP_PHP_GROUP} ${WP_PHP_LISTEN_OWNER} ${WP_PHP_LISTEN_GROUP}' < /etc/php/7.3/fpm/pool.d/www.conf
 
 exec "$@"
