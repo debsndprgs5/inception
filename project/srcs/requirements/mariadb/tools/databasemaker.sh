@@ -33,6 +33,6 @@ echo "Done setting up the db."
 
 fi
 
-/etc/init.d/mysql stop
+systemctl stop mariadb
 
 exec "$@"
