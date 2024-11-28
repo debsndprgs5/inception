@@ -3,11 +3,14 @@ FROM debian:buster
 ARG 		WP_PHP_USER
 ARG 		WP_PHP_GROUP
 
+ENV WP_PHP_USER=${WP_PHP_USER}
+ENV WP_PHP_GROUP=${WP_PHP_GROUP}
+
 #Add php user & group
 
-RUN	groupadd $WP_PHP_GROUP && \
-	useradd $WP_PHP_USER  && \
-	useradd -g $WP_PHP_GROUP $WP_PHP_USER
+RUN	groupadd ${WP_PHP_GROUP} && \
+	useradd ${WP_PHP_USER}  && \
+	useradd -g ${WP_PHP_GROUP} $WP_PHP_USER
 
 
 RUN apt-get update && apt-get -y install \
