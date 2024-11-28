@@ -21,6 +21,7 @@ else
 	cp wp-config-sample.php wp-config.php
 fi
 
+rm -rf /etc/php/7.3/fpm/pool.d/www.conf
 envsubst < /etc/php/7.3/fpm/pool.d/www.conf.template > /etc/php/7.3/fpm/pool.d/www.conf
 
 exec "$@"
