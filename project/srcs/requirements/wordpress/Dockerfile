@@ -1,94 +1,49 @@
 FROM debian:buster
 
-# Declare build arguments and set environment variables
-ARG 		WP_PHP_USER
-ARG 		WP_PHP_GROUP
+RUN apt-get update && apt-get -y install \
+	wget \
+	curl \
+	bash \
+	php \
+	php-cgi \
+	php-mysql \
+	php-fpm \
+	php-pdo \
+	php-gd php-cli \
+	php-mbstring \
+	redis \
+	php-redis \
+	&& rm -rf /var/lib/apt/lists/*
 
-ENV 		WP_PHP_USER=$WP_PHP_USER
-ENV 		WP_PHP_GROUP=$WP_PHP_GROUP
+#We need to install wp-cli and put it in the right dir
 
-# Install all requirements
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+  && chmod +x wp-cli.phar \
+  && mv wp-cli.phar /usr/local/bin/wp
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-    wget \
-    tar \
-    mariadb-client \
-    redis \
-    curl \
-    php \
-    php-fpm \
-    php-bcmath \
-    php-bz2 \
-    php-calendar \
-    php-cgi \
-    php-ctype \
-    php-common \
-    php-curl \
-    php-dom \
-    php-exif \
-    php-fileinfo \
-    php-gd \
-    php-imagick \
-    php-gmp \
-    php-imap \
-    php-intl \
-    php-json \
-    php-mbstring \
-    php-memcached \
-    php-mysqli \
-    php-mysql \
-    php-ldap \
-    php-opcache \
-    php-pdo \
-    php-pdo-mysql \
-    php-pdo-pgsql \
-    php-pdo-sqlite \
-    php-pgsql \
-    php-phar \
-    php-posix \
-    php-redis \
-    php-shmop \
-    php-simplexml \
-    php-soap \
-    php-sockets \
-    php-sqlite3 \
-    php-sysvsem \
-    php-sysvshm \
-    php-tokenizer \
-    php-xml \
-    php-xmlreader \
-    php-xmlrpc \
-    php-xmlwriter \
-    php-xsl \
-    php-zip \
-    gettext \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+#Copy the .conf in the html directory
+
+COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
+
+
+#Create the folder to enable php start
+
+RUN mkdir /run/php
+
+
+#Copy the script, grant access to exe
+
+COPY ./tools/create_wp.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/create_wp.sh
+ENTRYPOINT ["/usr/local/bin/create_wp.sh"]
 
 
 
-#Add php user
+WORKDIR /var/www/html/
 
-RUN    groupadd $WP_PHP_GROUP
-RUN    useradd -s /sbin/nologin --system -g $WP_PHP_GROUP $WP_PHP_USER
+EXPOSE 9000
 
+#Launch PHP FPM in foreground and ignore deamonize from conf file with -F flag
 
-
-
-#Copy my conf
-
-COPY		./conf/* ./
-
-#Install CLI
-
-RUN			curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-RUN			chmod +x wp-cli.phar
-RUN			mv -f wp-cli.phar /usr/local/bin/wp
-
-#Run script
-
-RUN			chmod 777 auto_config.sh
-ENTRYPOINT	["sh", "auto_config.sh"]
-
-CMD			["php-fpm7", "-F"]
-
-EXPOSE		$WP_PORT
+CMD ["/usr/sbin/php-fpm7.3", "-F"]
