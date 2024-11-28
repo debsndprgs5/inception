@@ -22,4 +22,6 @@ else
     echo "Done setting up the db."
 fi
 
+/etc/init.d/mysql stop
 
+exec "$@"
