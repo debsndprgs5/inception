@@ -19,9 +19,7 @@ else
     echo "FLUSH PRIVILEGES" | mysql -u root
     echo "ALTER USER '$DB_ROOT'@'localhost' IDENTIFIED BY '$DB_ROOT_PWD';" | mysql -u root --password=${DB_ROOT_PWD}
 #    echo "GRANT ALL ON *.* TO '$DB_ROOT'@'%' IDENTIFIED BY '$DB_ROOT_PWD';" | mysql -u root
-
+    echo "Done setting up the db."
 fi
 
-# Garder MariaDB actif
-wait
 
