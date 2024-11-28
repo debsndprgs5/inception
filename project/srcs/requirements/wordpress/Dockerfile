@@ -1,19 +1,20 @@
 FROM debian:buster
 
 RUN apt-get update && apt-get -y install \
-	wget \
-	curl \
-	bash \
-	php \
-	php-cgi \
-	php-mysql \
-	php-fpm \
-	php-pdo \
-	php-gd php-cli \
-	php-mbstring \
-	redis \
-	php-redis \
-	&& rm -rf /var/lib/apt/lists/*
+    wget \
+    curl \
+    bash \
+    php \
+    php-cgi \
+    php-mysql \
+    php-fpm \
+    php-pdo \
+    php-gd php-cli \
+    php-mbstring \
+    redis \
+    php-redis \
+    gettext-base \
+    && rm -rf /var/lib/apt/lists/*
 
 #We need to install wp-cli and put it in the right dir
 
