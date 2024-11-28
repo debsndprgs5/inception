@@ -1,5 +1,11 @@
 FROM debian:buster
 
+ARG 		WP_PHP_USER
+ARG 		WP_PHP_GROUP
+
+ENV 		WP_PHP_USER=$WP_PHP_USER
+ENV 		WP_PHP_GROUP=$WP_PHP_GROUP
+
 RUN apt-get update && apt-get -y install \
     wget \
     curl \
@@ -22,6 +28,9 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
   && chmod +x wp-cli.phar \
   && mv wp-cli.phar /usr/local/bin/wp
 
+#Add php user
+
+RUN 		adduser -S $WP_PHP_USER && addgroup -S $WP_PHP_GROUP
 
 #Copy the .conf in the html directory
 
@@ -37,7 +46,6 @@ RUN mkdir /run/php
 COPY ./tools/create_wp.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/create_wp.sh
 ENTRYPOINT ["/usr/local/bin/create_wp.sh"]
-
 
 
 WORKDIR /var/www/html/
