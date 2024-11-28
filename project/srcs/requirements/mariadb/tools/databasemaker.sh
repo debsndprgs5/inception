@@ -21,5 +21,3 @@ else
 #    echo "GRANT ALL ON *.* TO '$DB_ROOT'@'%' IDENTIFIED BY '$DB_ROOT_PWD';" | mysql -u root
     echo "Done setting up the db."
 fi
-
-/etc/init.d/mysql stop
