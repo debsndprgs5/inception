@@ -14,7 +14,7 @@ RUN apt-get update && apt-get -y install \
     php-mbstring \
     redis \
     php-redis \
-    gettext-base \ # Ajout de gettext pour envsubst
+    gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
 # Installation de WP-CLI
