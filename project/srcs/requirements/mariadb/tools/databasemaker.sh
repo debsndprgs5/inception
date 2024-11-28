@@ -22,6 +22,4 @@ else
     echo "Done setting up the db."
 fi
 
-service mysql stop
-
 exec "$@"
