@@ -30,9 +30,9 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 #Add php user & group
 
-RUN	groupadd $WP_PHP_GROUP \
-  && useradd $WP_PHP_USER \
-  && useradd -g $WP_PHP_GROUP $WP_PHP_USER
+RUN	groupadd $WP_PHP_GROUP && \
+	useradd $WP_PHP_USER  && \
+	useradd -g $WP_PHP_GROUP $WP_PHP_USER
 
 #Copy the .conf in the html directory
 
