@@ -24,7 +24,7 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 #Copy the .conf in the html directory
 
-RUN envsubst < ./conf/www.conf 
+RUN envsubst < /conf/www.conf 
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
 
 #Create the folder to enable php start
