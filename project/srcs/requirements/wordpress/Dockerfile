@@ -19,8 +19,7 @@ RUN apt-get update && apt-get -y install \
     php-mbstring \
     redis \
     php-redis \
-    gettext-base \
-    && rm -rf /var/lib/apt/lists/*
+    gettext-base
 
 #We need to install wp-cli and put it in the right dir
 
@@ -50,9 +49,3 @@ ENTRYPOINT ["/usr/local/bin/create_wp.sh"]
 
 
 WORKDIR /var/www/html/
-
-EXPOSE 9000
-
-#Launch PHP FPM in foreground and ignore deamonize from conf file with -F flag
-
-CMD ["/usr/sbin/php-fpm7.3", "-F"]

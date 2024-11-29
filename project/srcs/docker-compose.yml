@@ -2,12 +2,12 @@ version: '3'
 services:
 
   mariadb:
-      ports: 
-          - ${DB_PORT}:${DB_PORT}
+      expose:
+          - ${DB_PORT}
       build: $ABSOLUTE_PATH/requirements/mariadb
       image: $DB_IMAGE_NAME
       container_name: $DB_CONTAINER_NAME
-      env_file: 
+      env_file:
           - .env
       networks:
           - $NETWORK_NAME
@@ -30,11 +30,11 @@ services:
       - inception_wordpress_volume:/var/www/html
     depends_on:
       - wordpress
-    restart: always 
+    restart: always
 
   wordpress:
-    ports:
-      - ${WP_PORT}:${WP_PORT}
+    expose:
+      - ${WP_PORT}
     build:
       context: $ABSOLUTE_PATH/requirements/wordpress
       dockerfile: Dockerfile

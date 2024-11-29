@@ -1,5 +1,3 @@
-
-
 FROM	debian:buster
 
 #install all the program
@@ -18,14 +16,9 @@ COPY ./ssl/zfavere.crt /etc/nginx/ssl/
 COPY ./ssl/zfavere.key /etc/nginx/ssl/
 
 COPY ./conf/nginx.conf /etc/nginx/conf.d/
-RUN ls /etc/nginx/conf.d
-RUN ls /etc/nginx/ssl
 
 # nginx config
 RUN mkdir -p /run/nginx
-
-#the only port allowed
-EXPOSE	443
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
