@@ -2,7 +2,7 @@
 
 #Check if wp-config.php exists
 
-sleep 5
+sleep 25
 if [ -f ./wp-config.php ]
 then
 	echo "wordpress already downloaded"
@@ -16,4 +16,4 @@ fi
 rm -rf /etc/php/7.3/fpm/pool.d/www.conf
 envsubst < /etc/php/7.3/fpm/pool.d/www.conf.template > /etc/php/7.3/fpm/pool.d/www.conf
 
-/usr/sbin/php-fpm7.3 -F 
+/usr/sbin/php-fpm7.3 -F
