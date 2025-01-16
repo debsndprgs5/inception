@@ -1,3 +1,6 @@
+include ./srcs/.env
+export
+
 build:
 	@mkdir -p $(ABSOLUTE_PATH)$(DB_VOLUME_PATH) $(ABSOLUTE_PATH)$(WP_VOLUME_PATH)
 	@chmod 777 $(ABSOLUTE_PATH)$(DB_VOLUME_PATH) $(ABSOLUTE_PATH)$(WP_VOLUME_PATH)
