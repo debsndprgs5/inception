@@ -9,10 +9,16 @@ services:
       container_name: $DB_CONTAINER_NAME
       env_file:
           - .env
+      environment:
+        DB_ROOT_PWD: /run/secrets/db_root_password
+        DB_USER_PWD: /run/secrets/db_password
       networks:
           - $NETWORK_NAME
       volumes:
           - inception_mariadb_volume:/var/lib/mysql
+      secrets:
+        - db_root_password
+        - db_password
       restart: always
 
   nginx:
@@ -44,8 +50,14 @@ services:
     image: $WP_IMAGE_NAME
     container_name: wordpress
     env_file: .env
+    environment:
+      WP_ADMIN_PWD: /run/secrets/wp_root_password
+      WP_USER_PWD: /run/secrets/wp_password
     volumes:
       - inception_wordpress_volume:/var/www/html
+    secrets:
+      - wp_password
+      - wp_root_password
     networks:
       - $NETWORK_NAME
     depends_on: # wordpress needs to wait for the database to be init
@@ -73,6 +85,17 @@ volumes:
             type: none
             device: $ABSOLUTE_PATH$WP_VOLUME_PATH
         name: $WP_VOLUME_NAME
+
+secrets:
+  db_password:
+    file: ./db_password.txt
+  db_root_password:
+    file: ./db_root_password.txt
+  wp_password:
+    file: ./wp_password.txt
+  wp_root_password:
+    file: ./wp_root_password.txt
+
 
 networks:
   inception:
