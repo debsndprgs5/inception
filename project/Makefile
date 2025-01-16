@@ -6,7 +6,7 @@ build:
 	@chmod 777 $(ABSOLUTE_PATH)$(DB_VOLUME_PATH) $(ABSOLUTE_PATH)$(WP_VOLUME_PATH)
 	@sudo echo "127.0.0.1 $(DOMAIN_NAME)" >> $(HOSTS)
 	@sudo echo "127.0.0.1 www.$(DOMAIN_NAME)" >> $(HOSTS)
-	@docker-compose -f $(ABSOLUTE_PATH)/docker-compose.yml up build
+	@docker-compose -f $(ABSOLUTE_PATH)/docker-compose.yml up --build -d
 up: build
 	@docker-compose -f $(ABSOLUTE_PATH)/docker-compose.yml up -d
 down:
