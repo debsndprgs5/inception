@@ -88,13 +88,13 @@ volumes:
 
 secrets:
   db_password:
-    file: ./db_password.txt
+    file: ../secrets/db_password.txt
   db_root_password:
-    file: ./db_root_password.txt
+    file: ../secrets/db_root_password.txt
   wp_password:
-    file: ./wp_password.txt
+    file: ../secrets/wp_password.txt
   wp_root_password:
-    file: ./wp_root_password.txt
+    file: ../secrets/wp_root_password.txt
 
 
 networks:
